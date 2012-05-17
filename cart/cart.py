@@ -70,6 +70,7 @@ class Cart:
                 item.quantity = quantity
                 if unit_price:
                     item.unit_price = unit_price
+                item.save()
             else:
                 item.delete()
         except models.Item.DoesNotExist:
