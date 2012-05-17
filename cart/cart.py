@@ -79,6 +79,9 @@ class Cart:
             else:
                 raise ItemDoesNotExist
 
+    def get(self,product):
+        return Item.objects.get(cart=self.cart,product=product)
+
     def count(self):
         result = 0
         for item in self.cart.item_set.all():
