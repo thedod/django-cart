@@ -80,7 +80,7 @@ class Cart:
                 raise ItemDoesNotExist
 
     def get(self,product):
-        return Item.objects.get(cart=self.cart,product=product)
+        return models.Item.objects.get(cart=self.cart,product=product)
 
     def count(self):
         result = 0
