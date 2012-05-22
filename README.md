@@ -1,3 +1,13 @@
+# No documentation for this fork yet
+
+Below, you'll find the origin's documentation.
+
+This fork should work the same (except, maybe for Django 1.1 compatibility).
+
+It also does *more*, but *that* isn't documented yet (and no test code either)
+
+----
+
 # Introduction
 
 django-cart is a very simple application that just let you add and remove items from a session based cart. django-cart uses the power of the Django content type framework to enable you to have your own Product model and associate with the cart without having to change anything. Please refer to the tests to see how it's done.
