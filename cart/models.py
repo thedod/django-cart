@@ -23,6 +23,10 @@ class ItemManager(models.Manager):
             del(kwargs['product'])
         return super(ItemManager, self).get(*args, **kwargs)
 
+    def lookup(self,content_type,object_id):
+        "Handy when processing a form's post"
+        return ContentType.objects.get(pk=content_type).get_object_for_this_type(pk=object_id)
+
 class Item(models.Model):
     cart = models.ForeignKey(Cart, verbose_name=_('cart'))
     quantity = models.PositiveIntegerField(verbose_name=_('quantity'))

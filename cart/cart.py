@@ -1,5 +1,6 @@
 import datetime
-import models
+import models,forms
+from django.contrib.contenttypes.models import ContentType
 
 CART_ID = 'CART-ID'
 
@@ -80,7 +81,7 @@ class Cart:
                 raise ItemDoesNotExist
 
     def get(self,product):
-        return models.Item.objects.get(cart=self.cart,product=product)
+        return models.Item.objects.get(cart=self.cart, product=product)
 
     def count(self):
         result = 0
@@ -98,3 +99,40 @@ class Cart:
         for item in self.cart.item_set.all():
             item.delete()
 
+    def get_formset(self):
+        return forms.ItemFormSet (
+            queryset = models.Item.objects.filter(cart=self.cart)
+        )    
+    def get_formdicts(self,formset=None):
+        """template-friendly dicts with product and form.
+           first item (product=None) has global management_form and errors"""
+        formset = formset or self.get_formset()
+        dicts = [{'product':item.product,'form':form
+            } for item,form in zip(self,formset.forms)]
+        if dicts:
+            dicts.insert(0,
+                {'product':None,'form':formset.management_form,'errors':formset.errors})
+        return dicts
+        
+
+    def get_product_form(self,product):
+        try:
+            item = self.get(product)
+        except models.Item.DoesNotExist:
+            # Make a "fake item" with 0 quantity
+            item = models.Item()
+            # ignore item.cart. ItemForm ignores it too
+            item.product = product
+            item.unit_price = 0 # doesn't matter for form
+            item.quantity = 0
+            # don't save it (it's just for the form)
+        return forms.ItemForm(instance=item)
+
+    def lookup_product(self,content_type=None, object_id=None, form=None):
+        "usage: c.lookup_product(ct,oi) or c.lookup_product(form=someform)"
+        if form:
+            # Note: data and not cleaned_data because maybe not form.is_valid()
+            args = form.data or form.initial
+            content_type = args['content_type']
+            object_id = args['object_id']
+        return models.Item.objects.lookup(content_type,object_id)
