@@ -76,7 +76,8 @@ class Cart:
                 item.delete()
         except models.Item.DoesNotExist:
             if unit_price:
-                self.add(product, unit_price, quantity)
+                if quantity: # Maybe user updated 0 to 0. Happens
+                    self.add(product, unit_price, quantity)
             else:
                 raise ItemDoesNotExist
 
