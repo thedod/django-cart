@@ -108,11 +108,13 @@ class Cart:
         """template-friendly dicts with product and form.
            first item (product=None) has global management_form and errors"""
         formset = formset or self.get_formset()
-        dicts = [{'product':item.product,'form':form
+        dicts = [{'item':item,'product':item.product,'form':form
             } for item,form in zip(self,formset.forms)]
         if dicts:
             dicts.insert(0,
-                {'product':None,'form':formset.management_form,'errors':formset.errors})
+                {'item':None,'product':None,'form':formset.management_form,
+                    # Not sure we'd ever have global errors, but wouldn't hurt
+                    'errors':formset.errors})
         return dicts
         
 
