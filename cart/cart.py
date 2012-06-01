@@ -116,7 +116,12 @@ class Cart:
                     # Not sure we'd ever have global errors, but wouldn't hurt
                     'errors':formset.errors})
         return dicts
-        
+
+    def get_product_quantity(self,product):
+        try:
+            return self.get(product).quantity
+        except models.Item.DoesNotExist:
+            return 0
 
     def get_product_form(self,product):
         try:
