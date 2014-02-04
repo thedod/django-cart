@@ -15,6 +15,10 @@ register = template.Library()
 def cart_quantity(product,cart):
     return cart.get_product_quantity(product)
 
+@register.filter
+def cart_product_form(product,cart):
+    return cart.get_product_form(product)
+
 @register.filter(is_safe=True)
 def cart_product_as_p(product,cart):
     return cart.get_product_form(product).as_p()
